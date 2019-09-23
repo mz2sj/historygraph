@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	<!-- 引入数据库配置文件 -->
+	<context:property-placeholder location="classpath:dbconfig.properties"/>
+	
+	<!-- 扫包 除controller以外的注解都添加到容器中-->
+	<context:component-scan base-package="com.mz">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+		
+	<!-- 配置数据源 -->
+	<bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="comboPooledDataSource">
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+		<property name="user" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+	
+	<!-- 整合mybatis -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+		<property name="dataSource" ref="comboPooledDataSource"></property>
+		<property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+	</bean>
+	
+	<!-- 将mapper加入容器 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mz.dao"></property>
+	</bean>
+	<!-- 控制数据源 -->
+	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="dataSourceTransactionManager">
+		<property name="dataSource" ref="comboPooledDataSource"></property>
+	</bean>
+	
+	<!-- 事务控制 -->
+	<aop:config>
+		<!-- 事务切入点 -->
+		<aop:pointcut expression="execution(* com.mz.service..*(..))" id="txPoint"/>
+		<!-- 事务增强 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"/>
+	</aop:config>
+	
+	<!-- 配置事务增强，事务如何切入 -->
+	<tx:advice id="txAdvice" transaction-manager="dataSourceTransactionManager">
+		<tx:attributes>
+			<!-- 所有方法添加到事务 -->
+			<tx:method name="*"/>
+			<tx:method name="get*" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+</beans>
