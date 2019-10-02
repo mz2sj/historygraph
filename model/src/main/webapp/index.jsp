@@ -69,7 +69,7 @@
 		var nodedata=[];
 		graphdata.extend.node.forEach(function constructData(element, index) {
 			if(element.categories==1){
-				nodedata.push({'name':element.name,'category':element.categories-1,symbolSize:130});
+				nodedata.push({'name':element.name,'category':element.categories-1,symbolSize:100});
 			}
 			else if(element.categories==2){
 				nodedata.push({'name':element.name,'category':element.categories-1,symbolSize:100});
@@ -82,7 +82,7 @@
 			}
 		});
 		
-		//link数据
+	/* 	//link数据
 		var linkdata=[];
 		graphdata.extend.link.forEach(function constructData(link) {
 		    sourceid=link.source;
@@ -97,8 +97,65 @@
 		    });
 		    linkdata.push({'source':sourcename,'target':targetname});
 		    
-		});
+		}); */
 		
+		var linkdata=[];
+		globaldata.extend.link.forEach(function constructData(link) {
+				    //s t id
+					sourceid=link.source;
+				    targetid=link.target;
+					
+					//查询目标节点类别id
+				    globaldata.extend.node.forEach(function matchNode(node){
+				    	if(node.id==targetid){
+				    		categoriesid=node.categories;
+				    	}
+				    });
+
+					//查询目标节点的类别名字
+					globaldata.extend.category.forEach(function getCategoryName(category){
+						if(categoriesid==category.id.toString()){
+							nodeName=category.name;
+						}
+					});
+					
+					//查询起始节点的名字
+					globaldata.extend.node.forEach(function matchNode(node){
+				    	if(node.id==sourceid){
+				    		sourcename=node.name;
+				    	}
+				    	if(node.id==targetid){
+				    		targetname=node.name;
+				    	}
+				    });
+					
+					flag=0;//新节点不存在
+					//判断新节点是否已经存在 try跳出foreach
+					try{
+						nodedata.forEach(function(node){
+							if(node.name==nodeName){
+								flag=1;
+								throw new Error("ending");
+							}
+						});
+					}catch(e){
+						
+					}
+					
+					//创建新节点
+					if(flag==0){
+						nodedata.push({'name':nodeName,'category':categoriesid-1,symbolSize:100});
+					}
+					
+					//添加link数据
+					linkdata.push({'source':sourcename,'target':nodeName});
+					linkdata.push({'source':nodeName,'target':targetname});
+				    
+				    
+				});
+		
+		
+		//数据预处理结束
 		//检查echartDom对象是否已经存在
 		if (document.getElementById('main') == null) {
 	        return
@@ -153,7 +210,7 @@
 						focusNodeAdjacency: true,
 	                    force : { //力引导图基本配置
 	                        //initLayout: ,//力引导的初始化布局，默认使用xy轴的标点
-	                        repulsion : 1800,//节点之间的斥力因子。支持数组表达斥力范围，值越大斥力越大。
+	                        repulsion : 2800,//节点之间的斥力因子。支持数组表达斥力范围，值越大斥力越大。
 	                        gravity : 0.1,//节点受到的向中心的引力因子。该值越大节点越往中心点靠拢。
 	                        edgeLength :[10, 10],//边的两个节点之间的距离，这个距离也会受 repulsion。[10, 50] 。值越小则长度越长
 	           
