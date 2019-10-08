@@ -37,6 +37,8 @@
 
 <script type="text/javascript">
 	var globaldata;
+	var myChart;
+	var graphName;
 	$("#searchBtn").click(function(){
 		var searchNodeName=$("#searchNodeName").val();
 		$.ajax({
@@ -44,6 +46,7 @@
 			type:"GET",
 			data:"searchNodeName="+searchNodeName,
 			success:function(result){
+				graphName=searchNodeName;
 				graphData=result;
 				globaldata=result;
 				console.log(result);
@@ -163,6 +166,24 @@
 	    echarts.dispose(document.getElementById('main'));
 	    
 		var myChart=echarts.init(document.getElementById('main'));
+		//点击跳转
+		myChart.on('click', function (params) {
+		    //console.log(params.data.name);
+		    searchNodeName=params.data.name;
+			$.ajax({
+				url:"${APP_PATH}/search/",
+				type:"GET",
+				data:"searchNodeName="+searchNodeName,
+				success:function(result){
+					graphName=searchNodeName;
+					graphData=result;
+					globaldata=result;
+					console.log(result);
+					initecharts(result);
+				}
+			});
+		});
+		
 		option={
 				color:['#f69314', '#a2a8d3', '#5AB1EF', '#acc6aa'],
 				textStyle: {
@@ -185,7 +206,7 @@
 					data:legenddata//此处的数据必须和关系网类别中name相对应  ['事件','人物','地点','时间']
 				},  
 				title: { 
-					text: '睢水之战关系图谱',
+					text: graphName+'关系图谱',
 					left:'0',
 					top:'5%',
 					textStyle:{
