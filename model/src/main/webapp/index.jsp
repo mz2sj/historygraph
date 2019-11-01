@@ -83,6 +83,15 @@
 			else if(element.categories==4){
 				nodedata.push({'name':element.name,'category':element.categories-1,symbolSize:100});
 			}
+			else if(element.categories==5){
+				nodedata.push({'name':element.name,'category':element.categories-1,symbolSize:100});
+			}
+			else if(element.categories==6){
+				nodedata.push({'name':element.name,'category':element.categories-1,symbolSize:100});
+			}
+			else if(element.categories==7){
+				nodedata.push({'name':element.name,'category':element.categories-1,symbolSize:100});
+			}
 		});
 		
 	/* 	//link数据

@@ -25,7 +25,7 @@ public class SearchController {
 		//查询所有category
 		System.out.println();
 		List<Category> categoryList = searchService.searchCategory();
-		//查询节点所属category
+		//查询节点所属category对应id
 		String nodeCategoryNumber=searchService.searchNodeCategory(searchNodeName);
 		//查询节点id
 		Integer nodeId=searchService.searchNodeId(searchNodeName);

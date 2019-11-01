@@ -83,7 +83,11 @@ public class SearchService {
 		if(nodeCategoryNumber.equals("1")) {
 			criteria.andSourceEqualTo(nodeId.toString());
 			linkList=linkMapper.selectByExample(example);
-		}else {
+		}else if(nodeCategoryNumber.equals("2")){
+			criteria.andSourceEqualTo(nodeId.toString());
+			linkList=linkMapper.selectByExample(example);
+		}
+		else{
 			//其他类类返回t2s
 			criteria.andTargetEqualTo(nodeId.toString());
 			linkList = linkMapper.selectByExample(example);
