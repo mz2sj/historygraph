@@ -178,4 +178,19 @@
       categories = #{categories,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  
+  
+  
+  <select id="fuzzyQuery" parameterType='string' resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from tbl_node
+    where 1=1 
+    <if test="nodeName!=null and nodeName!=''">
+    	<bind name='pattern' value="'%'+nodeName+'%'"></bind>
+    	and name like #{pattern}
+    </if>
+    
+  </select>
 </mapper>

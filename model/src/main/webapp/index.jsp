@@ -58,19 +58,19 @@
 		//alert(graphData.extend.category[0].name);
 		//图例数据
 		var legenddata=[];
-		graphdata.extend.category.forEach(function constructData(element, index) {
+		graphdata.data.category.forEach(function constructData(element, index) {
 		    legenddata.push(element.name);
 		});
 		
 		//catagory 数据
 		var categorydata=[];
-		graphdata.extend.category.forEach(function constructData(element, index) {
+		graphdata.data.category.forEach(function constructData(element, index) {
 		    categorydata.push({'name':element.name});
 		});
 		
 		//node 数据
 		var nodedata=[];
-		graphdata.extend.node.forEach(function constructData(element, index) {
+		graphdata.data.node.forEach(function constructData(element, index) {
 			if(element.categories==1){
 				nodedata.push({'name':element.name,'category':element.categories-1,symbolSize:100});
 			}
@@ -112,27 +112,27 @@
 		}); */
 		
 		var linkdata=[];
-		globaldata.extend.link.forEach(function constructData(link) {
+		globaldata.data.link.forEach(function constructData(link) {
 				    //s t id
 					sourceid=link.source;
 				    targetid=link.target;
 					
 					//查询目标节点类别id
-				    globaldata.extend.node.forEach(function matchNode(node){
+				    globaldata.data.node.forEach(function matchNode(node){
 				    	if(node.id==targetid){
 				    		categoriesid=node.categories;
 				    	}
 				    });
 
 					//查询目标节点的类别名字
-					globaldata.extend.category.forEach(function getCategoryName(category){
+					globaldata.data.category.forEach(function getCategoryName(category){
 						if(categoriesid==category.id.toString()){
 							nodeName=category.name;
 						}
 					});
 					
 					//查询起始节点的名字
-					globaldata.extend.node.forEach(function matchNode(node){
+					globaldata.data.node.forEach(function matchNode(node){
 				    	if(node.id==sourceid){
 				    		sourcename=node.name;
 				    	}

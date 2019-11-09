@@ -73,6 +73,8 @@ public class SearchService {
 		Integer nodeId=nodeMapper.selectByExample(example).get(0).getId();
 		return nodeId;
 	}
+	
+	
 
 	public List<Link> searchLink(Integer nodeId, String nodeCategoryNumber) {
 		// TODO Auto-generated method stub
@@ -98,7 +100,13 @@ public class SearchService {
 				link.setTarget(temp);
 			}
 		}
-		return linkList;
+		List<Link> newList=null;
+		if(linkList.size()>10) {
+			newList = linkList.subList(0,50);
+		}else {
+			return linkList;
+		}
+		return newList;
 	}
 
 	public List<Node> searchNodes() {
@@ -128,6 +136,27 @@ public class SearchService {
 		}
 		
 		return nodeList;
+	}
+
+	public List<Node> fuzzyQuery(String partNodeName) {
+		// TODO Auto-generated method stub
+		List<Node> nodeList = nodeMapper.fuzzyQuery(partNodeName);
+		List<Node> newList=null;
+		if(nodeList.size()>10) {
+			newList = nodeList.subList(0,10);
+		}else {
+			return nodeList;
+		}
+		return newList;
+	}
+
+	public String searchNodeCategoryById(String id) {
+		// TODO Auto-generated method stub
+		NodeExample example=new NodeExample();
+		Criteria criteria=example.createCriteria();
+		criteria.andIdEqualTo(Integer.parseInt(id));
+		String categoryNumber = nodeMapper.selectByExample(example).get(0).getCategories();
+		return categoryNumber;
 	}
 
 }

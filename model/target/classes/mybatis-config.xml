@@ -6,10 +6,12 @@
 	<!-- 开启驼峰命名规则 -->
 	<settings>
 		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<setting name="logImpl" value="STDOUT_LOGGING" />
 	</settings>
 	
 	<!-- 开启别名,MyBatis 会在包名下面搜索需要的 Java Bean -->
 	<typeAliases>
 		<package name="com.mz.bean"/>
 	</typeAliases>	
+	
 </configuration>

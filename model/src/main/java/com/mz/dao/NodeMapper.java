@@ -27,4 +27,6 @@ public interface NodeMapper {
     int updateByPrimaryKeySelective(Node record);
 
     int updateByPrimaryKey(Node record);
+    
+    List<Node> fuzzyQuery(@Param("nodeName") String partnodename);
 }
